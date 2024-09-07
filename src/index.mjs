@@ -15,6 +15,14 @@ const mockUser = [
 ];
 
 app.get("/api/v1/users", (req, res) => {
+  console.log(req.query);
+  const { value, filter, name } = req.query;
+
+  if (!value && !filter && !name) {
+    return res.status(200).send(mockUser);
+  } else {
+    return mockUser.filter((user) => user[value].includes(filter));
+  }
   res.status(201).send(mockUser);
 });
 
