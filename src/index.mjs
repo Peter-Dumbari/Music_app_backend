@@ -33,6 +33,23 @@ app.get("/api/v1/users", (req, res) => {
   res.status(201).send(mockUser);
 });
 
+//sending data function
+
+app.post("/api/v1/users", (req, res) => {
+  console.log("req.body", req.body);
+  const { name, displayName } = req.body;
+  if (!name || !displayName) {
+    return res.status(400).send({ msg: "Bad Request" });
+  }
+  const newUser = {
+    id: mockUser.length,
+    name,
+    displayName,
+  };
+  mockUser.push(newUser);
+  res.status(201).send(newUser);
+});
+
 app.get("/api/v1/users/:id", (req, res) => {
   const parsedId = parseInt(req.params.id);
   if (isNaN(parsedId)) {
