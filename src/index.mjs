@@ -9,19 +9,26 @@ app.get("/", (req, res) => {
 });
 
 const mockUser = [
-  { id: 0, name: "john" },
-  { id: 1, name: "doe" },
-  { id: 2, name: "jane" },
+  { id: 0, name: "john", displayName: "Johny" },
+  { id: 1, name: "doe", displayName: "Doe" },
+  { id: 2, name: "jane", displayName: "Jane" },
 ];
 
 app.get("/api/v1/users", (req, res) => {
-  console.log(req.query);
-  const { value, filter, name } = req.query;
+  console.log("req.query", req.query);
+  const {
+    query: { filter, value },
+  } = req;
 
-  if (!value && !filter && !name) {
+  if (!value && !filter) {
     return res.status(200).send(mockUser);
-  } else {
-    return mockUser.filter((user) => user[value].includes(filter));
+  }
+
+  if (value && filter) {
+    const filteredUsers = mockUser.filter((user) =>
+      user[filter].includes(value)
+    );
+    return res.status(200).send(filteredUsers);
   }
   res.status(201).send(mockUser);
 });
