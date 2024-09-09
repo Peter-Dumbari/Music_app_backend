@@ -50,6 +50,15 @@ app.post("/api/v1/users", (req, res) => {
   res.status(201).send(newUser);
 });
 
+//creating a put request function
+app.put("/api/v1/users/:id", (req, res) => {
+  let {
+    body,
+    params: { id },
+  } = req;
+  console.log(body, id);
+});
+
 app.get("/api/v1/users/:id", (req, res) => {
   const parsedId = parseInt(req.params.id);
   if (isNaN(parsedId)) {
