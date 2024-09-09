@@ -1,6 +1,7 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,6 +32,22 @@ app.get("/api/v1/users", (req, res) => {
     return res.status(200).send(filteredUsers);
   }
   res.status(201).send(mockUser);
+});
+
+//sending data function
+
+app.post("/api/v1/users", (req, res) => {
+  console.log("req.body", req.body);
+  const { body } = req;
+  if (!body) {
+    return res.status(400).send({ msg: "Bad Request" });
+  }
+  const newUser = {
+    id: mockUser[mockUser.length - 1].id + 1,
+    ...body,
+  };
+  mockUser.push(newUser);
+  res.status(201).send(newUser);
 });
 
 app.get("/api/v1/users/:id", (req, res) => {
