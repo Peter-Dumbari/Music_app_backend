@@ -70,6 +70,23 @@ app.put("/api/v1/users/:id", (req, res) => {
   return res.sendStatus(200);
 });
 
+app.patch("/api/v1/users/:id", (req, res) => {
+  let {
+    body,
+    params: { id },
+  } = req;
+
+  const parseId = parseInt(id);
+  if (isNaN(parseId)) {
+    return res.status(400).send({ msg: "Bad Request. invalid ID" });
+  }
+  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
+
+  if (findUserIndex === -1) {
+    return res.status(404).send({ msg: "User not found" });
+  }
+});
+
 app.get("/api/v1/users/:id", (req, res) => {
   const parsedId = parseInt(req.params.id);
   if (isNaN(parsedId)) {
