@@ -56,7 +56,18 @@ app.put("/api/v1/users/:id", (req, res) => {
     body,
     params: { id },
   } = req;
-  console.log(body, id);
+
+  const parseId = parseInt(id);
+  if (isNaN(parseId)) {
+    return res.status(400).send({ msg: "Bad Request. invalid ID" });
+  }
+  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
+
+  if (findUserIndex === -1) {
+    return res.status(404).send({ msg: "User not found" });
+  }
+  mockUser[findUserIndex] = { id: parseId, ...body };
+  return res.sendStatus(200);
 });
 
 app.get("/api/v1/users/:id", (req, res) => {
