@@ -104,6 +104,24 @@ app.get("/api/v1/users/:id", (req, res) => {
   }
 });
 
+app.delete("/api/v1/users/:id", (req, res) => {
+  let {
+    params: { id },
+  } = req;
+
+  const parseId = parseInt(id);
+  if (isNaN(parseId)) {
+    return res.status(400).send({ msg: "Bad Request. invalid ID" });
+  }
+
+  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
+  if (findUserIndex === -1) {
+    return res.status(404).send({ msg: "User not found" });
+  }
+  mockUser.splice(findUserIndex, 1);
+  return res.sendStatus(200);
+});
+
 app.get("/api/v1/products", (req, res) => {
   res.status(201).send([
     { id: 0, name: "product 1" },
