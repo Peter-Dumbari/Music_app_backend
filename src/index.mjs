@@ -85,6 +85,9 @@ app.patch("/api/v1/users/:id", (req, res) => {
   if (findUserIndex === -1) {
     return res.status(404).send({ msg: "User not found" });
   }
+
+  mockUser[findUserIndex] = { ...mockUser[findUserIndex], ...body };
+  return res.sendStatus(200);
 });
 
 app.get("/api/v1/users/:id", (req, res) => {
