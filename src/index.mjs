@@ -9,6 +9,25 @@ const loggerMiddleWare = (req, res, next) => {
   next();
 };
 
+const resolveFindUserIndex = (req, res, next) => {
+  let {
+    params: { id },
+  } = req;
+
+  const parseId = parseInt(id);
+  if (isNaN(parseId)) {
+    return res.status(400).send({ msg: "Bad Request. invalid ID" });
+  }
+  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
+
+  if (findUserIndex === -1) {
+    return res.status(404).send({ msg: "User not found" });
+  }
+  req.findUserIndex = findUserIndex;
+  next();
+};
+// app.use(loggerMiddleWare); // this will log all the request
+
 app.get("/", (req, res) => {
   res.status(201).send({ msg: "Hello World" });
 });
@@ -20,7 +39,6 @@ const mockUser = [
 ];
 
 app.get("/api/v1/users", (req, res) => {
-  console.log("req.query", req.query);
   const {
     query: { filter, value },
   } = req;
@@ -40,67 +58,49 @@ app.get("/api/v1/users", (req, res) => {
 
 //sending data function
 
-app.post("/api/v1/users", (req, res) => {
-  console.log("req.body", req.body);
-  const { body } = req;
-  if (!body) {
-    return res.status(400).send({ msg: "Bad Request" });
+app.post(
+  "/api/v1/users",
+  (res, req, next) => {
+    console.log("req.body", req.body); // this middle ware will log the body of the request
+    next();
+  },
+  (req, res) => {
+    console.log("req.body", req.body);
+    const { body } = req;
+    if (!body) {
+      return res.status(400).send({ msg: "Bad Request" });
+    }
+    const newUser = {
+      id: mockUser[mockUser.length - 1].id + 1,
+      ...body,
+    };
+    mockUser.push(newUser);
+    res.status(201).send(newUser);
   }
-  const newUser = {
-    id: mockUser[mockUser.length - 1].id + 1,
-    ...body,
-  };
-  mockUser.push(newUser);
-  res.status(201).send(newUser);
-});
+);
 
 //creating a put request function
-app.put("/api/v1/users/:id", (req, res) => {
-  let {
-    body,
-    params: { id },
-  } = req;
-
-  const parseId = parseInt(id);
-  if (isNaN(parseId)) {
-    return res.status(400).send({ msg: "Bad Request. invalid ID" });
-  }
-  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
-
-  if (findUserIndex === -1) {
-    return res.status(404).send({ msg: "User not found" });
-  }
-  mockUser[findUserIndex] = { id: parseId, ...body };
+app.put("/api/v1/users/:id", resolveFindUserIndex, (req, res) => {
+  let { body, findUserIndex } = req;
+  mockUser[findUserIndex] = { id: mockUser[findUserIndex].id, ...body };
+  console.log("findUserIndex", findUserIndex);
   return res.sendStatus(200);
 });
 
-app.patch("/api/v1/users/:id", (req, res) => {
-  let {
-    body,
-    params: { id },
-  } = req;
+app.use(loggerMiddleWare); // this will log all the request from this point down
 
-  const parseId = parseInt(id);
-  if (isNaN(parseId)) {
-    return res.status(400).send({ msg: "Bad Request. invalid ID" });
-  }
-  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
+//creating a patch request function
 
-  if (findUserIndex === -1) {
-    return res.status(404).send({ msg: "User not found" });
-  }
+app.patch("/api/v1/users/:id", resolveFindUserIndex, (req, res) => {
+  let { body, findUserIndex } = req;
 
   mockUser[findUserIndex] = { ...mockUser[findUserIndex], ...body };
   return res.sendStatus(200);
 });
 
-app.get("/api/v1/users/:id", (req, res) => {
-  const parsedId = parseInt(req.params.id);
-  if (isNaN(parsedId)) {
-    return res.status(400).send({ msg: "Bad Request. invalid ID" });
-  }
-
-  const user = mockUser.find((user) => user.id === parsedId);
+app.get("/api/v1/users/:id", resolveFindUserIndex, (req, res) => {
+  let { findUserIndex } = req;
+  const user = mockUser[findUserIndex];
   if (!user) {
     return res.status(404).send({ msg: "User not found" });
   } else {
@@ -108,20 +108,8 @@ app.get("/api/v1/users/:id", (req, res) => {
   }
 });
 
-app.delete("/api/v1/users/:id", (req, res) => {
-  let {
-    params: { id },
-  } = req;
-
-  const parseId = parseInt(id);
-  if (isNaN(parseId)) {
-    return res.status(400).send({ msg: "Bad Request. invalid ID" });
-  }
-
-  const findUserIndex = mockUser.findIndex((user) => user.id === parseId);
-  if (findUserIndex === -1) {
-    return res.status(404).send({ msg: "User not found" });
-  }
+app.delete("/api/v1/users/:id", resolveFindUserIndex, (req, res) => {
+  const { findUserIndex } = req;
   mockUser.splice(findUserIndex, 1);
   return res.sendStatus(200);
 });
