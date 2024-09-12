@@ -1,5 +1,12 @@
 import express from "express";
-import { query, validationResult } from "express-validator";
+import {
+  query,
+  validationResult,
+  body,
+  matchedData,
+  checkSchema,
+} from "express-validator";
+import { createUserValidationSchema } from "./utils/validationSchema.mjs";
 
 const app = express();
 app.use(express.json());
@@ -53,7 +60,7 @@ app.get(
       query: { filter, value },
     } = req;
     const result = validationResult(req);
-    console.log("result", result);
+    if (!result.isEmpty()) return res.status(400).send(result.array());
     if (!value && !filter) {
       return res.status(200).send(mockUser);
     }
@@ -72,19 +79,22 @@ app.get(
 
 app.post(
   "/api/v1/users",
+  checkSchema(createUserValidationSchema),
   (res, req, next) => {
     console.log("req.body", req.body); // this middle ware will log the body of the request
     next();
   },
   (req, res) => {
-    console.log("req.body", req.body);
-    const { body } = req;
-    if (!body) {
-      return res.status(400).send({ msg: "Bad Request" });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send(errors.array());
     }
+    const data = matchedData(req);
+    console.log("data", data);
+
     const newUser = {
       id: mockUser[mockUser.length - 1].id + 1,
-      ...body,
+      ...data,
     };
     mockUser.push(newUser);
     res.status(201).send(newUser);
