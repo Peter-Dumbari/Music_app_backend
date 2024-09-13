@@ -1,4 +1,12 @@
 import express from "express";
+import {
+  query,
+  validationResult,
+  body,
+  matchedData,
+  checkSchema,
+} from "express-validator";
+import { createUserValidationSchema } from "./utils/validationSchema.mjs";
 
 const app = express();
 app.use(express.json());
@@ -38,41 +46,55 @@ const mockUser = [
   { id: 2, name: "jane", displayName: "Jane" },
 ];
 
-app.get("/api/v1/users", (req, res) => {
-  const {
-    query: { filter, value },
-  } = req;
+app.get(
+  "/api/v1/users",
+  query("filter")
+    .isString()
+    .withMessage("filter must be a string")
+    .notEmpty()
+    .withMessage("Must not be empty")
+    .isLength({ min: 3, max: 10 })
+    .withMessage("filter must be a string and must be between 3-10 characters"),
+  (req, res) => {
+    const {
+      query: { filter, value },
+    } = req;
+    const result = validationResult(req);
+    if (!result.isEmpty()) return res.status(400).send(result.array());
+    if (!value && !filter) {
+      return res.status(200).send(mockUser);
+    }
 
-  if (!value && !filter) {
-    return res.status(200).send(mockUser);
+    if (value && filter) {
+      const filteredUsers = mockUser.filter((user) =>
+        user[filter].includes(value)
+      );
+      return res.status(200).send(filteredUsers);
+    }
+    res.status(201).send(mockUser);
   }
-
-  if (value && filter) {
-    const filteredUsers = mockUser.filter((user) =>
-      user[filter].includes(value)
-    );
-    return res.status(200).send(filteredUsers);
-  }
-  res.status(201).send(mockUser);
-});
+);
 
 //sending data function
 
 app.post(
   "/api/v1/users",
+  checkSchema(createUserValidationSchema),
   (res, req, next) => {
     console.log("req.body", req.body); // this middle ware will log the body of the request
     next();
   },
   (req, res) => {
-    console.log("req.body", req.body);
-    const { body } = req;
-    if (!body) {
-      return res.status(400).send({ msg: "Bad Request" });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send(errors.array());
     }
+    const data = matchedData(req);
+    console.log("data", data);
+
     const newUser = {
       id: mockUser[mockUser.length - 1].id + 1,
-      ...body,
+      ...data,
     };
     mockUser.push(newUser);
     res.status(201).send(newUser);
