@@ -7,11 +7,12 @@ import {
   checkSchema,
 } from "express-validator";
 import { createUserValidationSchema } from "./utils/validationSchema.mjs";
-import userRouter from "./routes/user.mjs";
+import usersRouter from "./routes/user.mjs";
+import { mockUser } from "./utils/constants.mjs";
 
 const app = express();
 app.use(express.json());
-app.use(userRouter);
+app.use(usersRouter);
 
 const PORT = process.env.PORT || 3000;
 const loggerMiddleWare = (req, res, next) => {
@@ -41,12 +42,6 @@ const resolveFindUserIndex = (req, res, next) => {
 app.get("/", (req, res) => {
   res.status(201).send({ msg: "Hello World" });
 });
-
-const mockUser = [
-  { id: 0, name: "john", displayName: "Johny" },
-  { id: 1, name: "doe", displayName: "Doe" },
-  { id: 2, name: "jane", displayName: "Jane" },
-];
 
 //sending data function
 
