@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { query, validationResult } from "express-validator";
+import { mockUser } from "../utils/constants.mjs";
 
 const router = Router();
 
