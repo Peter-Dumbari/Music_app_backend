@@ -14,6 +14,9 @@ const loggerMiddleWare = (req, res, next) => {
 // app.use(loggerMiddleWare); // this will log all the request
 
 app.get("/", (req, res) => {
+  res.cookie("hello", "world", {
+    maxAge: 6000 * 60,
+  });
   res.status(201).send({ msg: "Hello World" });
 });
 
