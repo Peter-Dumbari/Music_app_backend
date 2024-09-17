@@ -1,8 +1,10 @@
 import express from "express";
 import routes from "./routes/index.mjs";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(routes);
 
 const PORT = process.env.PORT || 3000;
@@ -14,6 +16,9 @@ const loggerMiddleWare = (req, res, next) => {
 // app.use(loggerMiddleWare); // this will log all the request
 
 app.get("/", (req, res) => {
+  res.cookie("hello", "world", {
+    maxAge: 10000,
+  });
   res.status(201).send({ msg: "Hello World" });
 });
 
