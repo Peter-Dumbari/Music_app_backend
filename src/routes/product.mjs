@@ -11,7 +11,7 @@ router.get("/api/v1/products", (req, res) => {
       { id: 2, name: "product 3" },
     ]);
   } else
-    return res.status(400).send("you need to have correct cookie to see this");
+    return res.status(403).send("you need to have correct cookie to see this");
 });
 
 export default router;

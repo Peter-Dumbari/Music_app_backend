@@ -17,7 +17,7 @@ const loggerMiddleWare = (req, res, next) => {
 
 app.get("/", (req, res) => {
   res.cookie("hello", "world", {
-    maxAge: 6000 * 60,
+    maxAge: 10000,
   });
   res.status(201).send({ msg: "Hello World" });
 });
