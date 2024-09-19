@@ -13,6 +13,16 @@ const router = Router();
 
 //index
 router.get("/api/v1/users", (req, res) => {
+  console.log("session", req.session);
+  console.log("session id from user", req.sessionID);
+  req.sessionStore.get(req.session.id, (err, sessionData) => {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+
+    console.log("sessionData", sessionData);
+  });
   const {
     query: { filter, value },
   } = req;
@@ -35,6 +45,7 @@ router.get("/api/v1/users", (req, res) => {
 
 router.get("/api/v1/users/:id", resolveFindUserIndex, (req, res) => {
   let { findUserIndex } = req;
+
   const user = mockUser[findUserIndex];
   if (!user) {
     return res.status(404).send({ msg: "User not found" });
