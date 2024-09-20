@@ -3,10 +3,13 @@ import routes from "./routes/index.mjs";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import { mockUser } from "./utils/constants.mjs";
+import passport from "passport";
+import "./strategies/local-strategy.mjs";
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(
   session({
     secret: "Peter the dev",
@@ -18,6 +21,9 @@ app.use(
     },
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(routes);
 
 const PORT = process.env.PORT || 3000;
@@ -36,30 +42,44 @@ app.get("/", (req, res) => {
   res.status(201).send({ msg: "Hello World" });
 });
 
-app.post("/api/v1/auth", (req, res) => {
-  const {
-    body: { username, password },
-  } = req;
+// app.post("/api/v1/auth", (req, res) => {
+//   const {
+//     body: { username, password },
+//   } = req;
 
-  const findUser = mockUser.find((user) => user.name === username);
+//   const findUser = mockUser.find((user) => user.name === username);
 
-  if (!findUser || findUser.password !== password)
-    return res.status(401).send({ msg: "Invalid Credentials" });
+//   if (!findUser || findUser.password !== password)
+//     return res.status(401).send({ msg: "Invalid Credentials" });
 
-  req.session.user = findUser;
+//   req.session.user = findUser;
 
-  return res.status(200).send(findUser);
+//   return res.status(200).send(findUser);
+// });
+
+// app.get("/api/v1/auth/status", (req, res) => {
+//   req.sessionStore.get(req.sessionID, (err, session) => {
+//     console.log("session", session);
+//   });
+//   return req.session.user
+// ? res.status(201).send(req.session.user)
+//     : res.status(401).send({ msg: "User not authenticated" });
+// });
+
+app.post("/api/v1/auth", passport.authenticate("local"), (req, res) => {
+  return res.send({ msg: "Hello world" });
 });
 
 app.get("/api/v1/auth/status", (req, res) => {
-  req.sessionStore.get(req.sessionID, (err, session) => {
-    console.log("session", session);
-  });
-  return req.session.user
-    ? res.status(201).send(req.session.user)
-    : res.status(401).send({ msg: "User not authenticated" });
+  console.log("inside api/v1/status");
+  console.log("req.user", req.user);
+  console.log("req.session", req.session);
+  if (req.user) {
+    return res.status(201).send(req.user);
+  } else {
+    return res.status(401).send({ msg: "User not authenticated" });
+  }
 });
-
 app.post("/api/v1/cart", (req, res) => {
   if (!req.session.user)
     return res.status(404).send({ msg: "user not authenticated" });
@@ -73,6 +93,17 @@ app.post("/api/v1/cart", (req, res) => {
   }
 
   return res.status(201).send(item);
+});
+
+app.post("/api/v1/auth/logout", (req, res) => {
+  if (!req.user) {
+    return res.status(404).send({ msg: "User not found" });
+  }
+
+  req.logOut((err) => {
+    if (err) return res.sendStatus(401);
+    res.send({ msg: "You have succesfully logout" }).status(201);
+  });
 });
 
 app.get("/api/v1/cart", (req, res) => {
