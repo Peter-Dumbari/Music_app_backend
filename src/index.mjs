@@ -95,14 +95,14 @@ app.post("/api/v1/cart", (req, res) => {
   return res.status(201).send(item);
 });
 
-app.post("api/v1/auth/logout", (req, res) => {
+app.post("/api/v1/auth/logout", (req, res) => {
   if (!req.user) {
-    return res.status(401).send({ msg: "User not found" });
+    return res.status(404).send({ msg: "User not found" });
   }
 
   req.logOut((err) => {
     if (err) return res.sendStatus(401);
-    return res.status(201);
+    res.send({ msg: "You have succesfully logout" }).status(201);
   });
 });
 
