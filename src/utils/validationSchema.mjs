@@ -1,15 +1,15 @@
 export const createUserValidationSchema = {
-  name: {
+  username: {
     isLength: {
-      errorMessage: "Name must be between 3-10 characters",
+      errorMessage: "Username must be between 3-10 characters",
       options: { min: 3, max: 10 },
     },
     notEmpty: {
-      errorMessage: "Name is required",
+      errorMessage: "Username is required",
     },
 
     isString: {
-      errorMessage: "Name must be a string",
+      errorMessage: "Username must be a string",
     },
   },
 
@@ -17,5 +17,9 @@ export const createUserValidationSchema = {
     notEmpty: {
       errorMessage: "Display Name is required",
     },
+  },
+
+  password: {
+    notEmpty: true,
   },
 };

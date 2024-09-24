@@ -8,6 +8,7 @@ import {
 import { mockUser } from "../utils/constants.mjs";
 import { createUserValidationSchema } from "../utils/validationSchema.mjs";
 import { resolveFindUserIndex } from "../utils/middlewares.mjs";
+import { User } from "../mongoose/schema/user.mjs";
 
 const router = Router();
 
@@ -75,26 +76,48 @@ router.delete("/api/v1/users/:id", resolveFindUserIndex, (req, res) => {
 });
 
 //create
+// router.post(
+//   "/api/v1/users",
+//   checkSchema(createUserValidationSchema),
+//   (res, req, next) => {
+//     next();
+//   },
+//   (req, res) => {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       return res.status(400).send(errors.array());
+//     }
+//     const data = matchedData(req);
+//     console.log("data", data);
+
+//     const newUser = {
+//       id: mockUser[mockUser.length - 1].id + 1,
+//       ...data,
+//     };
+//     mockUser.push(newUser);
+//     res.status(201).send(newUser);
+//   }
+// );
+
 router.post(
   "/api/v1/users",
   checkSchema(createUserValidationSchema),
-  (res, req, next) => {
-    next();
-  },
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).send(errors.array());
     }
     const data = matchedData(req);
-    console.log("data", data);
+    // const { body } = req;
+    const newUser = new User(data);
 
-    const newUser = {
-      id: mockUser[mockUser.length - 1].id + 1,
-      ...data,
-    };
-    mockUser.push(newUser);
-    res.status(201).send(newUser);
+    try {
+      const saveUser = await newUser.save();
+      return res.status(201).send(saveUser);
+    } catch (err) {
+      console.log("user creation error:", err);
+      return res.sendStatus(400);
+    }
   }
 );
 
