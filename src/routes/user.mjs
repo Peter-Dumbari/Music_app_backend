@@ -9,6 +9,7 @@ import { mockUser } from "../utils/constants.mjs";
 import { createUserValidationSchema } from "../utils/validationSchema.mjs";
 import { resolveFindUserIndex } from "../utils/middlewares.mjs";
 import { User } from "../mongoose/schema/user.mjs";
+import { harshPassword } from "../utils/helpers.mjs";
 
 const router = Router();
 
@@ -108,6 +109,8 @@ router.post(
       return res.status(400).send(errors.array());
     }
     const data = matchedData(req);
+    data.password = harshPassword(data.password);
+    console.log("data", data);
     // const { body } = req;
     const newUser = new User(data);
 
