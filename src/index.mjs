@@ -130,3 +130,7 @@ app.use(loggerMiddleWare); // this will log all the request from this point down
 app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`);
 });
+
+//client secret: 4LWGTtkwEKwtL7p4XWn6geKrG1edTnlA
+// client id: 1288468034020835380;
+// http://localhost:3000/api/v1/auth/discord/redirect
