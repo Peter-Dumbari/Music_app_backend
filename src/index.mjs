@@ -2,16 +2,16 @@ import express from "express";
 import routes from "./routes/index.mjs";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import { mockUser } from "./utils/constants.mjs";
 import passport from "passport";
 import mongoose from "mongoose";
+import "./strategies/discord-strategy.mjs";
 import MongoStore from "connect-mongo";
 // import "./strategies/local-strategy.mjs";
-import "./strategies/discord-strategy.mjs";
 
 const app = express();
 mongoose
-  .connect("mongodb://localhost/express-tutorial")
+  .connect("mongodb://127.0.0.1:27017/express-tutorial")
+
   .then(() => console.log("connected to Database"))
   .catch((err) => console.log("Error:", err));
 app.use(express.json());
@@ -77,9 +77,9 @@ app.get("/", (req, res) => {
 //     : res.status(401).send({ msg: "User not authenticated" });
 // });
 
-app.post("/api/v1/auth", passport.authenticate("local"), (req, res) => {
-  return res.send({ msg: "Hello world" });
-});
+// app.post("/api/v1/auth", passport.authenticate("local"), (req, res) => {
+//   return res.send({ msg: "Hello world" });
+// });
 
 app.get("/api/v1/auth/status", (req, res) => {
   console.log("inside api/v1/status");
@@ -128,7 +128,15 @@ app.use(loggerMiddleWare); // this will log all the request from this point down
 
 //creating a patch request function
 
-app, get("/api/v1/auth/discord", passport.authenticate("discord"));
+app.get("/api/v1/auth/discord", passport.authenticate("discord"));
+
+app.get(
+  "/api/v1/auth/discord/redirect",
+  passport.authenticate("discord"),
+  (req, res) => {
+    res.sendStatus(200);
+  }
+);
 
 app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`);
