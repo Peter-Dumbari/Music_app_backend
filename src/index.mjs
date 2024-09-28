@@ -6,7 +6,8 @@ import { mockUser } from "./utils/constants.mjs";
 import passport from "passport";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
-import "./strategies/local-strategy.mjs";
+// import "./strategies/local-strategy.mjs";
+import "./strategies/discord-strategy.mjs";
 
 const app = express();
 mongoose
@@ -126,6 +127,8 @@ app.get("/api/v1/cart", (req, res) => {
 app.use(loggerMiddleWare); // this will log all the request from this point down
 
 //creating a patch request function
+
+app, get("/api/v1/auth/discord", passport.authenticate("discord"));
 
 app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`);
