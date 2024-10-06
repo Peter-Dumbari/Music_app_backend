@@ -2,6 +2,7 @@ import express from "express";
 import dbConnect from "./configs/dbConnect.mjs";
 import dotenv from "dotenv";
 import authUser from "./routes/authRoutes.mjs";
+import categoryRoutes from "./routes/categoryRoutes.mjs";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 dbConnect();
 app.use("/api/user/", authUser);
+app.use("/api/category", categoryRoutes);
 app.listen(PORT, () => {
   console.log(`Server is running at PORT ${PORT}`);
 });
