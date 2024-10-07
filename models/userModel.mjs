@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 // Declare the Schema of the Mongo model
 const userSchema = new mongoose.Schema(
@@ -28,6 +29,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre("save", async function (next) {
+  const salt = bcrypt.genSaltSync(10);
+  this.password = bcrypt.hashSync(this.password, salt);
+});
 
 // Export the model as default
 export default mongoose.model("User", userSchema);
