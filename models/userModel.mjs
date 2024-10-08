@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    refreshToken: {
+      type: string,
+    },
   },
   { timestamps: true }
 );
@@ -35,7 +38,7 @@ userSchema.pre("save", async function (next) {
   this.password = bcrypt.hashSync(this.password, salt);
 });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
+userSchema.methods.isPasswordMatched = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 // Export the model as default
