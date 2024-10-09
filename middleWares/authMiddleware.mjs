@@ -1,6 +1,6 @@
 import User from "../models/userModel.mjs";
 import jwt from "jsonwebtoken";
-const asyncHandler = require("express-async-handler");
+import asyncHandler from "express-async-handler";
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
   let token;
@@ -23,4 +23,14 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   }
 });
 
-export default authMiddleware;
+const isAdmin = asyncHandler(async (req, res, next) => {
+  const { email } = req.user;
+  const adminUser = await User.findOne({ email });
+  if (adminUser.role !== "admin") {
+    throw new Error("You are not an admin");
+  } else {
+    next();
+  }
+});
+
+export { authMiddleware, isAdmin };
