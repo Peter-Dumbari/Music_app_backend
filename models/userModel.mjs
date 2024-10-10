@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    role: {
+      type: String,
+      default: "user",
+    },
+
     mobile: {
       type: String,
       required: true,
@@ -27,7 +32,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     refreshToken: {
-      type: string,
+      type: String,
     },
   },
   { timestamps: true }

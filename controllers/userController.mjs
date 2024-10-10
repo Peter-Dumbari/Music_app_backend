@@ -1,3 +1,4 @@
+import { generateToken } from "../configs/jwtToken.mjs";
 import User from "../models/userModel.mjs";
 import asyncHandler from "express-async-handler";
 
@@ -24,7 +25,10 @@ export const loginController = asyncHandler(async (req, res) => {
     return res.json({
       msg: "Login successful",
       success: true,
-      user: findUser,
+      id: findUser._id,
+      name: findUser.firstname,
+      email: findUser.email,
+      token: generateToken(findUser._id),
     });
   } else {
     throw new Error("Invalid credentials");
@@ -47,7 +51,7 @@ export const getUser = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
   const user = await User.findByIdAndUpdate(id, req.body, { new: true });
   if (!user) {
     res.status(404);
