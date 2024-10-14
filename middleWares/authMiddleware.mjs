@@ -19,6 +19,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
       throw new Error("Not authorized, Please login");
     }
   } else {
+    res.status(401);
     throw new Error("There is no token attached to header");
   }
 });
@@ -27,7 +28,10 @@ const isAdmin = asyncHandler(async (req, res, next) => {
   const { email } = req.user;
   const adminUser = await User.findOne({ email });
   if (adminUser.role !== "admin") {
-    throw new Error("You are not an admin");
+    res.status(401).json({
+      msg: "You are not authorized to access this route",
+      success: false,
+    });
   } else {
     next();
   }
