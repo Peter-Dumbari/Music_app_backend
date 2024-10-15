@@ -82,3 +82,26 @@ export const deleteMusic = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
+//download music
+export const downloadMusic = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const music = await Music.findById(id);
+    await Music.findByIdAndUpdate(
+      id,
+      {
+        $inc: { downloads: 1 },
+      },
+      { new: true }
+    );
+
+    if (!music) {
+      return res.status(404).json({ msg: "Music not found" });
+    }
+
+    res.redirect(music.fileUrl);
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};

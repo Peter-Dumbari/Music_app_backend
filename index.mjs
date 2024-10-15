@@ -8,6 +8,7 @@ import morgan from "morgan";
 import { errorHandler, notFound } from "./middleWares/errorHandler.mjs";
 import cookieParser from "cookie-parser";
 import musicRoutes from "./routes/musicRoute.mjs";
+import artistRoutes from "./routes/artistRoutes.mjs";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ dbConnect();
 app.use("/api/user/", authUser);
 app.use("/api/category", categoryRoutes);
 app.use("/api/music", musicRoutes);
+app.use("/api/artist", artistRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
