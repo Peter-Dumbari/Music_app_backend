@@ -39,3 +39,46 @@ export const createMusic = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// Get all music
+export const getMusic = async (req, res) => {
+  try {
+    // Fetch all music from the database
+    const music = await Music.find();
+
+    return res.status(200).json({ music });
+  } catch (error) {
+    console.error("Error fetching music:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+//update music
+
+export const updateMusic = async (req, res) => {
+  try {
+    const music = await Music.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!music) {
+      return res.status(404).json({ msg: "Music not found" });
+    }
+    return res.status(200).json(music);
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
+
+//delete music
+
+export const deleteMusic = async (req, res) => {
+  try {
+    const music = await Music.findByIdAndDelete(req.params.id);
+    if (!music) {
+      return res.status(404).json({ msg: "Music not found" });
+    }
+    return res.status(200).json({ msg: "Music deleted successfully" });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
