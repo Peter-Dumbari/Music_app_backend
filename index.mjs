@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import { errorHandler, notFound } from "./middleWares/errorHandler.mjs";
 import cookieParser from "cookie-parser";
+import musicRoutes from "./routes/musicRoute.mjs";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -17,8 +18,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 dbConnect();
 app.use("/api/user/", authUser);
-
 app.use("/api/category", categoryRoutes);
+app.use("/api/music", musicRoutes);
+
 app.use(notFound);
 app.use(errorHandler);
 app.listen(PORT, () => {
