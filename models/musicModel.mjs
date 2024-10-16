@@ -34,7 +34,7 @@ const mediaSchema = new mongoose.Schema(
       enum: ["audio", "music_video", "event_video"],
       required: true,
     },
-    releaseDate: {
+    postDate: {
       type: Date,
       default: Date.now,
     },
