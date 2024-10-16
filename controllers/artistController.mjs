@@ -35,6 +35,39 @@ export const createArtist = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
+export const updateArtist = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the artist by ID
+    const artist = await Artist.findById(id);
+    if (!artist) {
+      return res.status(404).json({ msg: "Artist not found" });
+    }
+
+    // If there's an uploaded file, update the profile picture URL
+    if (req.file && req.file.path) {
+      req.body.profilePictureUrl = req.file.path; // Set the new profile picture URL
+    }
+
+    // Update the artist's details
+    const updatedArtist = await Artist.findByIdAndUpdate(
+      id,
+      {
+        $set: req.body, // Update artist fields, including the profile picture
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Artist updated successfully",
+      artist: updatedArtist,
+    });
+  } catch (error) {
+    console.error("Error updating artist:", error);
+    return res.status(500).json({ msg: error.message });
+  }
+};
 
 export const deleteArtist = async (req, res) => {
   try {
