@@ -9,6 +9,7 @@ import { errorHandler, notFound } from "./middleWares/errorHandler.mjs";
 import cookieParser from "cookie-parser";
 import musicRoutes from "./routes/musicRoute.mjs";
 import artistRoutes from "./routes/artistRoutes.mjs";
+import albumRoutes from "./routes/albumRoutes.mjs";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,7 @@ app.use("/api/user/", authUser);
 app.use("/api/category", categoryRoutes);
 app.use("/api/music", musicRoutes);
 app.use("/api/artist", artistRoutes);
+app.use("/api/album", albumRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
