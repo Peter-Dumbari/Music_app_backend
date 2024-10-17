@@ -1,27 +1,29 @@
+import { log } from "console";
 import Music from "../models/musicModel.mjs"; // Assuming the model is named mediaModel.js
 
 // Create and upload music
 export const createMusic = async (req, res) => {
   try {
-    // Check if file was uploaded
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
+    // Check if files were uploaded
+    if (!req.files || !req.files.music) {
+      return res.status(400).json({ message: "No music file uploaded" });
     }
 
-    // Cloudinary file URL (uploaded file URL)
-    const fileUrl = req.file.path;
+    // Cloudinary URLs for music and thumbnail
+    const musicFileUrl = req.files.music[0].path; // Get music file URL
 
-    // Optional: Thumbnail URL for the music
-    const thumbnailUrl = req.body.thumbnailUrl || null;
+    const thumbnailFileUrl = req.files.thumbnailUrl
+      ? req.files.thumbnailUrl[0].path // If thumbnail was uploaded
+      : null;
 
-    // Create the new music document using the Media model
+    // Create the new music document using the Music model
     const newMusic = new Music({
       title: req.body.title,
       artist: req.body.artist || null, // Artist can be optional for event videos
       album: req.body.album || null, // Optional album
       category: req.body.category,
-      fileUrl: fileUrl, // Cloudinary file URL
-      thumbnailUrl: thumbnailUrl, // Thumbnail, if provided
+      fileUrl: musicFileUrl, // Cloudinary music file URL
+      thumbnailUrl: thumbnailFileUrl, // Cloudinary thumbnail URL (if provided)
       mediaType: req.body.mediaType, // Should be either "audio", "music_video", or "event_video"
       releaseDate: req.body.releaseDate || Date.now(),
       description: req.body.description || "",
@@ -42,9 +44,16 @@ export const createMusic = async (req, res) => {
 
 // Get all music
 export const getMusic = async (req, res) => {
+  const objectQuery = { ...req.query };
+  console.log("objectQuery", objectQuery);
+
+  const excludeFields = ["name", "page", "limit", "sort"];
+  excludeFields.forEach((el) => delete objectQuery[el]);
+
+  console.log("query2", excludeFields);
   try {
     // Fetch all music from the database
-    const music = await Music.find();
+    const music = await Music.where("mediaType").equals("audio");
 
     return res.status(200).json({ music });
   } catch (error) {

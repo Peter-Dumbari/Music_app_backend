@@ -42,10 +42,6 @@ const mediaSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    likes: {
-      type: Number,
-      default: 0,
-    },
     description: {
       type: String,
       required: false,

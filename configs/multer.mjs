@@ -8,13 +8,11 @@ const storage = new CloudinaryStorage({
   params: async (req, file) => {
     let folderName = "musics"; // Default folder for music files
 
-    // Choose folder based on file type
-    if (file.mimetype.startsWith("image")) {
-      if (req.path.includes("profile")) {
-        folderName = "profile_pictures"; // Folder for profile pictures
-      } else {
-        folderName = "thumbnails"; // Folder for music thumbnails
-      }
+    // Choose folder based on the field name in the form data
+    if (file.fieldname === "profilePicture") {
+      folderName = "profile_pictures"; // Folder for profile pictures
+    } else if (file.fieldname === "thumbnailUrl") {
+      folderName = "thumbnails"; // Folder for music thumbnails
     }
 
     return {
