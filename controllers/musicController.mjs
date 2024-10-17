@@ -45,15 +45,13 @@ export const createMusic = async (req, res) => {
 // Get all music
 export const getMusic = async (req, res) => {
   const objectQuery = { ...req.query };
-  console.log("objectQuery", objectQuery);
 
   const excludeFields = ["name", "page", "limit", "sort"];
   excludeFields.forEach((el) => delete objectQuery[el]);
 
-  console.log("query2", excludeFields);
   try {
     // Fetch all music from the database
-    const music = await Music.where("mediaType").equals("audio");
+    const music = await Music.find(objectQuery);
 
     return res.status(200).json({ music });
   } catch (error) {

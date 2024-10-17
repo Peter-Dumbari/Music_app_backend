@@ -13,7 +13,8 @@ const mediaSchema = new mongoose.Schema(
       required: false, // Can be optional for event videos
     },
     album: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Album",
       required: false, // Only for music
     },
     category: {
