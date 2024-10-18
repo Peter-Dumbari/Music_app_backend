@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 import musicRoutes from "./routes/musicRoute.mjs";
 import artistRoutes from "./routes/artistRoutes.mjs";
 import albumRoutes from "./routes/albumRoutes.mjs";
+import eventRoutes from "./routes/eventRoutes.mjs";
+import ticketRoutes from "./routes/ticketRoutes.mjs";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +26,8 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/music", musicRoutes);
 app.use("/api/artist", artistRoutes);
 app.use("/api/album", albumRoutes);
+app.use("/api/event", eventRoutes);
+app.use("/api/ticket", ticketRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
