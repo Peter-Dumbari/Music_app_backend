@@ -29,7 +29,8 @@
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "stripe": "^17.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
