@@ -21,10 +21,12 @@ export const buyTicket = async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: event.price * 100,
       currency: "usd",
-      payment_method_data: paymentMethodId,
+      payment_method: "pm_card_visa",
+      automatic_payment_methods: { enabled: true, allow_redirects: "never" },
       confirm: true,
     });
 
+    console.log("paymentIntent", paymentIntent);
     if (paymentIntent.status === "succeeded") {
       event.ticketAvailable -= 1;
       await event.save();
