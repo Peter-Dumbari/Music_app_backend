@@ -7,6 +7,10 @@ var eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    poster: {
+      type: String,
+      required: false,
+    },
     description: {
       type: String,
       required: true,
@@ -15,14 +19,26 @@ var eventSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    price: {
-      type: Number,
+    location: {
+      type: String,
       required: true,
     },
-    ticketAvailable: {
-      type: Number,
-      required: true,
-    },
+    ticketTypes: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
     organizer: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
