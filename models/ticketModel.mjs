@@ -17,6 +17,10 @@ var ticketSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  ticketType: {
+    type: String,
+    required: true,
+  },
   pricePaid: {
     type: Number,
     required: true,

@@ -8,27 +8,37 @@ export const buyTicket = async (req, res) => {
 
   const eventId = req.params.id;
   const { id } = req.user;
-  const { paymentMethodId } = req.body;
+  const { paymentMethodId, ticketType } = req.body;
 
   try {
     const event = await Event.findById(eventId);
-    if (!event) {
+    if (!event || event.ticketAvailable <= 0) {
       return res
         .status(404)
         .json({ msg: "Event is sold out or does not exist" });
     }
 
+    const selectedTicket = event.ticketTypes.find(
+      (type) => type.name === ticketType
+    );
+
+    if (!selectedTicket) {
+      return res.status(404).json({ msg: "Ticket type does not exist" });
+    }
+    if (selectedTicket.quantity <= 0) {
+      return res.status(404).json({ msg: "Ticket type is sold out" });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: event.price * 100,
+      amount: selectedTicket.price * 100,
       currency: "usd",
-      payment_method: "pm_card_visa",
+      payment_method: paymentMethodId,
       automatic_payment_methods: { enabled: true, allow_redirects: "never" },
       confirm: true,
     });
 
-    console.log("paymentIntent", paymentIntent);
     if (paymentIntent.status === "succeeded") {
-      event.ticketAvailable -= 1;
+      selectedTicket.quantity -= 1;
       await event.save();
 
       //generate unique ticket number
@@ -40,7 +50,8 @@ export const buyTicket = async (req, res) => {
       const ticket = await Ticket.create({
         event: eventId,
         buyer: id,
-        pricePaid: event.price,
+        pricePaid: selectedTicket.price,
+        ticketType: selectedTicket.name,
         ticketNumber,
       });
 
@@ -50,6 +61,18 @@ export const buyTicket = async (req, res) => {
     } else {
       return res.status(400).json({ msg: "Payment failed" });
     }
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+};
+
+export const getTickets = async (req, res) => {
+  const { id } = req.user;
+
+  try {
+    const tickets = await Ticket.find({ buyer: id }).populate("event");
+
+    res.status(200).json(tickets);
   } catch (error) {
     res.status(500).json({ msg: error });
   }
