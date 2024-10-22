@@ -7,9 +7,10 @@ import {
   updateEvent,
 } from "../controllers/eventController.mjs";
 import { authMiddleware, isAdmin } from "../middleWares/authMiddleware.mjs";
+import upload from "../configs/multer.mjs";
 const router = express.Router();
 
-router.post("/", authMiddleware, isAdmin, createEvent);
+router.post("/", authMiddleware, isAdmin, upload.single("poster"), createEvent);
 router.get("/", getEvents);
 router.get("/:id", getEvent);
 router.put("/:id", authMiddleware, isAdmin, updateEvent);
