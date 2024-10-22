@@ -12,6 +12,8 @@ import artistRoutes from "./routes/artistRoutes.mjs";
 import albumRoutes from "./routes/albumRoutes.mjs";
 import eventRoutes from "./routes/eventRoutes.mjs";
 import ticketRoutes from "./routes/ticketRoutes.mjs";
+import blogRoutes from "./routes/blogRoutes.mjs";
+import commentRoutes from "./routes/commentRoutes.mjs";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +30,8 @@ app.use("/api/artist", artistRoutes);
 app.use("/api/album", albumRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/ticket", ticketRoutes);
+app.use("/api/blog", blogRoutes);
+app.use("/api/comment", commentRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

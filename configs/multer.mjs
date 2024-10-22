@@ -13,6 +13,10 @@ const storage = new CloudinaryStorage({
       folderName = "profile_pictures"; // Folder for profile pictures
     } else if (file.fieldname === "thumbnailUrl") {
       folderName = "thumbnails"; // Folder for music thumbnails
+    } else if (file.fieldname === "poster") {
+      folderName = "event_posters"; // Folder for event posters
+    } else if (file.fieldname === "blog") {
+      folderName = "blog_images";
     }
 
     return {
