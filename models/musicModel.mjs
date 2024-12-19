@@ -47,6 +47,13 @@ const mediaSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     timestamps: true, // Automatically adds `createdAt` and `updatedAt`

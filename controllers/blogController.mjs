@@ -18,7 +18,7 @@ export const postBlog = async (req, res) => {
 
 export const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate("comments");
+    const blogs = await Blog.find().populate("comments").populate("author");
     return res.status(201).json(blogs);
   } catch (error) {
     return res.status(500).json({ message: "failed to get the blogs", error });
@@ -29,25 +29,25 @@ export const getBlog = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const blog = Blog.findById(id);
+    const blog = await Blog.findById(id)
+      .populate("comments")
+      .populate("author");
     if (!blog) {
       return res.status(404).json({
         message: "Blog not found",
       });
     }
 
-    return res
-      .status(201)
-      .json(blog)
-      .populate("comment")
-      .exec((error, blog) => {
-        if (error) {
-          return res
-            .status(500)
-            .json({ message: "error fetching comment", error });
-        }
-        res.json(blog);
-      });
+    return res.status(201).json(blog);
+
+    // .exec((error, blog) => {
+    //   if (error) {
+    //     return res
+    //       .status(500)
+    //       .json({ message: "error fetching comment", error });
+    //   }
+    //   res.json(blog);
+    // });
   } catch (error) {
     return res.status(500).json({ message: "Error getting blog", error });
   }
