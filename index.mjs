@@ -14,12 +14,16 @@ import eventRoutes from "./routes/eventRoutes.mjs";
 import ticketRoutes from "./routes/ticketRoutes.mjs";
 import blogRoutes from "./routes/blogRoutes.mjs";
 import commentRoutes from "./routes/commentRoutes.mjs";
+import cors from "cors";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app = express();
+app.use(cors());
+
 app.use(morgan("dev"));
 app.use(cookieParser());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 dbConnect();
