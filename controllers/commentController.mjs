@@ -12,7 +12,8 @@ export const addComment = async (req, res) => {
 
     // Create the new comment
     const newComment = await Comment.create({
-      blog: blogId,
+      type: "blog",
+      refId: blogId,
       user: userId,
       content: commentText, // Make sure 'commentText' is being stored in 'content' field
     });

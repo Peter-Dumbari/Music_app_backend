@@ -51,7 +51,7 @@ export const getMusic = async (req, res) => {
 
   try {
     // Fetch all music from the database
-    const music = await Music.find(objectQuery);
+    const music = await Music.find(objectQuery).populate("comments");
 
     return res.status(200).json({ music });
   } catch (error) {
@@ -112,3 +112,5 @@ export const downloadMusic = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
+export const likeMusic = (req, res) => {};
