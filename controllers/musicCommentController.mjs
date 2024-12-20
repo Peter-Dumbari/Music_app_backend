@@ -18,6 +18,7 @@ export const addMusicComment = async (req, res) => {
     });
 
     music.comments.push(newComment._id);
+
     await music.save();
 
     return res.status(200).json({
