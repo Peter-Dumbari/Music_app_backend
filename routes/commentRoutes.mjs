@@ -8,6 +8,7 @@ import {
 import {
   addMusicComment,
   deleteMusicComment,
+  updateMusicComment,
 } from "../controllers/musicCommentController.mjs";
 
 const router = express.Router();
@@ -27,5 +28,10 @@ router.delete(
   "/music/:musicId/comments/:commentId",
   authMiddleware,
   deleteMusicComment
+);
+router.put(
+  "/music/:musicId/comments/:commentId",
+  authMiddleware,
+  updateMusicComment
 );
 export default router;

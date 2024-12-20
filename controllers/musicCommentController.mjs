@@ -33,6 +33,40 @@ export const addMusicComment = async (req, res) => {
   }
 };
 
+export const updateMusicComment = async (req, res) => {
+  const { musicId, commentId } = req.params;
+  const { userId, content } = req.body;
+
+  try {
+    const music = await Music.findById(musicId);
+    if (!music) return res.status(404).json({ message: "Music not found" });
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    if (comment.user.toString() !== userId)
+      return res
+        .status(401)
+        .json({ messge: "Not permitted to edit someone's comment" });
+
+    const editComment = await Comment.findByIdAndUpdate(
+      commentId,
+      { content },
+      {
+        new: true,
+      }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Comment updated successfully", comment: editComment });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong editing comment" });
+  }
+};
+
 export const deleteMusicComment = async (req, res) => {
   const { musicId, commentId } = req.params;
   const { userId } = req.body;
