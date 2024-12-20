@@ -8,14 +8,19 @@ const commentSchema = new mongoose.Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
-    blog: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Blog",
-      require: true,
-    },
     content: {
       type: String,
       required: true, // Comment text is required
+    },
+    type: {
+      type: String,
+      enum: ["blog", "music"], // Specify the type of the comment
+      required: true,
+    },
+    refId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      refPath: "type", // Dynamically references the associated model (Blog or Music)
     },
   },
   {
