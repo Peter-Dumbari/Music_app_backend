@@ -1,5 +1,4 @@
-import { log } from "console";
-import Music from "../models/musicModel.mjs"; // Assuming the model is named mediaModel.js
+import Music from "../models/medialModel.mjs"; // Assuming the model is named mediaModel.js
 
 // Create and upload music
 export const createMusic = async (req, res) => {
