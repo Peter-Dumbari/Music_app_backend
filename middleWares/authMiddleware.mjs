@@ -28,7 +28,7 @@ const isAdmin = asyncHandler(async (req, res, next) => {
   const adminUser = await User.findOne({ email });
   if (adminUser.role !== "admin") {
     res.status(401).json({
-      msg: "You are not authorized to access this route",
+      msg: "Only admin can access this route",
       success: false,
     });
   } else {

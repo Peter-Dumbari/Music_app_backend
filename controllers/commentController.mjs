@@ -12,7 +12,8 @@ export const addComment = async (req, res) => {
 
     // Create the new comment
     const newComment = await Comment.create({
-      blog: blogId,
+      type: "blog",
+      refId: blogId,
       user: userId,
       content: commentText, // Make sure 'commentText' is being stored in 'content' field
     });
@@ -45,7 +46,9 @@ export const updateComment = async (req, res) => {
     if (!comment) return res.status(404).json({ message: "Comment not found" });
 
     if (comment.user.toString() !== userId)
-      return res.status(402).json({ message: "you can't someone's comment" });
+      return res
+        .status(402)
+        .json({ message: "you can't edit someone's comment" });
 
     const editComment = await Comment.findByIdAndUpdate(
       commentId,

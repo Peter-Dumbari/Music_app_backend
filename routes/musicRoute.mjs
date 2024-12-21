@@ -26,6 +26,7 @@ router.put(
   updateMusic
 );
 router.get("/:id", downloadMusic);
+router.put("/id");
 router.delete("/:id", authMiddleware, isAdmin, deleteMusic);
 
 export default router;

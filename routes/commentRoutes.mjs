@@ -5,11 +5,33 @@ import {
   deleteComment,
   updateComment,
 } from "../controllers/commentController.mjs";
+import {
+  addMusicComment,
+  deleteMusicComment,
+  updateMusicComment,
+} from "../controllers/musicCommentController.mjs";
 
 const router = express.Router();
 
-router.post("/:blogId", authMiddleware, addComment);
-router.put("/:blogId/comments/:commentId", authMiddleware, updateComment);
-router.delete("/:blogId/comments/:commentId", authMiddleware, deleteComment);
+//blog
+router.post("/blog/:blogId", authMiddleware, addComment);
+router.put("/blog/:blogId/comments/:commentId", authMiddleware, updateComment);
+router.delete(
+  "/blog/:blogId/comments/:commentId",
+  authMiddleware,
+  deleteComment
+);
 
+//music
+router.post("/music/:musicId", authMiddleware, addMusicComment);
+router.delete(
+  "/music/:musicId/comments/:commentId",
+  authMiddleware,
+  deleteMusicComment
+);
+router.put(
+  "/music/:musicId/comments/:commentId",
+  authMiddleware,
+  updateMusicComment
+);
 export default router;
