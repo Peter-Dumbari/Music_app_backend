@@ -50,3 +50,16 @@ export const getVideos = async (req, res) => {
     });
   }
 };
+
+export const updateVideo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const video = Video.findByIdAndUpdate(id, req.body, { new: true });
+    if (!video)
+      return res.json(404).json({ message: `video with id ${id} not found` });
+
+    return res.status(200).json({ message: "Video updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "something went wrong", error });
+  }
+};
