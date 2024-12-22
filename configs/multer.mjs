@@ -17,6 +17,8 @@ const storage = new CloudinaryStorage({
       folderName = "event_posters"; // Folder for event posters
     } else if (file.fieldname === "blog") {
       folderName = "blog_images";
+    } else if (file.fieldname === "video") {
+      folderName = "videos";
     }
 
     return {
