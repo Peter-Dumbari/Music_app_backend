@@ -41,7 +41,7 @@ export const getVideos = async (req, res) => {
   exclusiveField.forEach((el) => delete objectQuery[el]);
 
   try {
-    const video = await Video.find(objectQuery).populate("comments");
+    const video = await Video.find({ mediaType: "video" }).populate("comments");
     return res.status(200).json({ video });
   } catch (error) {
     return res.status(500).json({

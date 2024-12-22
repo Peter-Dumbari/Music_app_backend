@@ -32,7 +32,7 @@ const mediaSchema = new mongoose.Schema(
     },
     mediaType: {
       type: String,
-      enum: ["audio", "music_video", "event_video"],
+      enum: ["audio", "video"],
       required: true,
     },
     postDate: {
