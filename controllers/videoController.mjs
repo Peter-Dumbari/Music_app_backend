@@ -51,6 +51,23 @@ export const getVideos = async (req, res) => {
   }
 };
 
+export const getVideoById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const video = await Video.findById(id).populate("comments");
+
+    if (!video)
+      return res.status(404).json({ message: `Video with id ${id} not found` });
+
+    return res.status(200).json(video);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong getting video", error });
+  }
+};
+
 export const updateVideo = async (req, res) => {
   const { id } = req.params;
   try {
