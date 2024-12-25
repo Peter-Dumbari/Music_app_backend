@@ -14,7 +14,7 @@ const commentSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["blog", "music"], // Specify the type of the comment
+      enum: ["blog", "music", "video"], // Specify the type of the comment
       required: true,
     },
     refId: {

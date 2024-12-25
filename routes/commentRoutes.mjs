@@ -10,6 +10,10 @@ import {
   deleteMusicComment,
   updateMusicComment,
 } from "../controllers/musicCommentController.mjs";
+import {
+  addVidComment,
+  updateVidComment,
+} from "../controllers/videoComment.mjs";
 
 const router = express.Router();
 
@@ -33,5 +37,13 @@ router.put(
   "/music/:musicId/comments/:commentId",
   authMiddleware,
   updateMusicComment
+);
+
+//video
+router.post("/video/:id", authMiddleware, addVidComment);
+router.put(
+  "/video/:vidId/comments/:commentId",
+  authMiddleware,
+  updateVidComment
 );
 export default router;

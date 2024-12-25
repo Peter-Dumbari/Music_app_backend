@@ -98,3 +98,5 @@ export const deleteVideo = async (req, res) => {
       .json({ message: "Something went wrong while deleting video", error });
   }
 };
+
+export const commentVideo = async (req, res) => {};
