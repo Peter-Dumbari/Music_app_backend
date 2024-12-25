@@ -70,3 +70,12 @@ export const updateVidComment = async (req, res) => {
     });
   }
 };
+
+export const deleteVidComment = async (req, res) => {
+  const { vidId, commentId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const video = Video.findById(vidId);
+  } catch (error) {}
+};
