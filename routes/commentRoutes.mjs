@@ -12,6 +12,7 @@ import {
 } from "../controllers/musicCommentController.mjs";
 import {
   addVidComment,
+  deleteVidComment,
   updateVidComment,
 } from "../controllers/videoComment.mjs";
 
@@ -45,5 +46,10 @@ router.put(
   "/video/:vidId/comments/:commentId",
   authMiddleware,
   updateVidComment
+);
+router.delete(
+  "/video/:vidId/comments/:commentId",
+  authMiddleware,
+  deleteVidComment
 );
 export default router;
