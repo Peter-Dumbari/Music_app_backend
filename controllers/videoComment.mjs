@@ -34,3 +34,39 @@ export const addVidComment = async (req, res) => {
     });
   }
 };
+
+export const updateVidComment = async (req, res) => {
+  const { commentId, vidId } = req.params;
+  const { userId, content } = req.body;
+
+  try {
+    const video = await Video.findById(vidId);
+    if (!video)
+      return res
+        .status(404)
+        .json({ message: `video with the id ${vidId} not found` });
+
+    const comment = await Comment.findById(commentId);
+
+    if (comment.user.toString() !== userId)
+      return res.status(400).json({
+        message: "Can't modify some'ones comment ",
+      });
+
+    const editComment = await Comment.findByIdAndUpdate(
+      commentId,
+      { content },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Comment Updated sucessfully",
+      comment: editComment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong",
+      error,
+    });
+  }
+};
