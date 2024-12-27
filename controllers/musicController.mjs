@@ -59,6 +59,25 @@ export const getMusic = async (req, res) => {
   }
 };
 
+//get music by id
+
+export const getMusicById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const music = await Music.findById(id).populate("comments");
+    if (!music) {
+      return res
+        .status(404)
+        .json({ message: `Music with the id ${id} is not found` });
+    }
+
+    return res.status(200).json({ music });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+};
+
 //update music
 
 export const updateMusic = async (req, res) => {
