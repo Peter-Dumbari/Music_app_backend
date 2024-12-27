@@ -4,6 +4,7 @@ import {
   deleteMusic,
   downloadMusic,
   getMusic,
+  getMusicById,
   updateMusic,
 } from "../controllers/musicController.mjs";
 import { authMiddleware, isAdmin } from "../middleWares/authMiddleware.mjs";
@@ -18,6 +19,7 @@ const musicUpload = upload.fields([
 
 router.post("/", authMiddleware, isAdmin, musicUpload, createMusic);
 router.get("/", getMusic);
+router.get("/:id", getMusicById);
 router.put(
   "/:id",
   authMiddleware,
