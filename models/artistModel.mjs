@@ -35,6 +35,11 @@ const artistSchema = new mongoose.Schema(
       type: Boolean,
       default: false, // Indicates if the artist is verified
     },
+
+    release_date: {
+      type: Date,
+      required: false,
+    },
   },
   {
     timestamps: true,
