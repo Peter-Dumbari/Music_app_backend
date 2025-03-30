@@ -26,7 +26,7 @@ const storage = new CloudinaryStorage({
       resource_type: file.mimetype.startsWith("image") ? "image" : "auto", // 'image' for pictures, 'auto' for music files
       allowed_formats: file.mimetype.startsWith("image")
         ? ["jpg", "jpeg", "png"] // Allowed formats for images
-        : ["mp3", "wav"], // Allowed formats for music files
+        : ["mp3", "wav", "mp4"], // Allowed formats for music files
     };
   },
 });

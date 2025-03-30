@@ -50,8 +50,10 @@ export const getMusic = async (req, res) => {
 
   try {
     // Fetch all music from the database
-    const music = await Music.find(objectQuery).populate("comments");
-
+    const music = await Music.find(objectQuery)
+      .populate("comments")
+      .populate("artist")
+      .populate("category");
     return res.status(200).json({ music });
   } catch (error) {
     console.error("Error fetching music:", error);
@@ -65,7 +67,9 @@ export const getMusicById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const music = await Music.findById(id).populate("comments");
+    const music = await Music.findById(id)
+      .populate("comments")
+      .populate("artist");
     if (!music) {
       return res
         .status(404)
